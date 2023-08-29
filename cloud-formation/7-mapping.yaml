@@ -1,0 +1,42 @@
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html
+# Using pseudo param AWS::Region
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      HVM64: ami-0f409bae3775dc8e5
+    ap-southeast-1:
+      HVM64: ami-0e047ce9149262f82
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      # Find imageId by current Region when creating stack
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", HVM64]
+      InstanceType: "t2.micro"
+      # update tags
+      Tags:
+        - Key: "Label"
+          Value: "ec2-from-cloudformation"
+        - Key: "Env"
+          Value: "lab"
+        # -->Using pseudo param AWS::Region
+        - Key: "InstanceRegion"
+          Value: !Join
+            - " "
+            - - "EC2 instance in"
+              - !Ref AWS::Region
+  #     SecurityGroups:
+  #       - !Ref MyEC2InstanceSG
+  # # update SG for EC2
+  # MyEC2InstanceSG:
+  #   Type: AWS::EC2::SecurityGroup
+  #   Properties:
+  #     GroupDescription: "Enable SSH access via port 22"
+  #     SecurityGroupIngress:
+  #       - IpProtocol: "tcp"
+  #         FromPort: "22"
+  #         ToPort: "22"
+  #         CidrIp: "0.0.0.0/0"
