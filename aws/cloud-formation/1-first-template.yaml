@@ -1,0 +1,17 @@
+#Template anatomy: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-anatomy.html
+#Template reference: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-reference.html
+
+#Update requires: No interruption Không tạo sự gián đoạn với instance đang chạy
+
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0e047ce9149262f82"
+      InstanceType: "t2.micro"
+      Tags:
+        - Key: "Label"
+          Value: "ec2-from-cloudformation"
+        - Key: "Env"
+          Value: "lab"
